@@ -10,6 +10,9 @@ enum ErrorCodes {
   TASK_CANNOT_BE_STOPPED = "Task cannot be stopped.",
   SCHEDULER_NOT_DEFINED = "The scheduler is not defined.",
   PUBLISHER_NOT_DEFINED = "The publisher is not defined.",
+
+  // General
+  CANNOT_INITIALIZE_ABSTRACT_CLASSES = "You cannot initialize abstract classes.",
 }
 
 export default ErrorCodes;

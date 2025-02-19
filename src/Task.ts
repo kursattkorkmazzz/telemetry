@@ -1,55 +1,66 @@
-import Status from "./enums/Status.js";
-import IMetricCollector from "./interfaces/IMetricCollector.js";
-import IPublisher from "./interfaces/IPublisher.js";
-import IScheduler from "./interfaces/IScheduler.js";
-import MetricDataStorage from "./libs/storage/MetricDataStorage.js";
-import Storage from "./libs/storage/Storage.js";
-import MetricData from "./types/MetricData.js";
-import ErrorCodes from "./utils/errors/ErrorCodes.js";
-import PrintError from "./utils/errors/PrintError.js";
+import AbstractMetricCollector from "./core/abstracts/AbstractMetricCollector.js";
+import AbstractPublisher from "./core/abstracts/AbstractPublisher.js";
+import AbstractScheduler from "./core/abstracts/AbstractScheduler.js";
+import Status from "./core/enums/Status.js";
+
+import MetricDataStorage from "./core/libs/storage/MetricDataStorage.js";
+import Storage from "./core/libs/storage/Storage.js";
+import MetricData from "./core/types/MetricData.js";
+import ErrorCodes from "./core/utils/errors/ErrorCodes.js";
+import PrintError from "./core/utils/errors/PrintError.js";
 
 export default class Task {
   private _status: Status;
-  private _metricCollectors: Storage<IMetricCollector>;
-  private _scheduler: IScheduler | null;
-  private _publisher: IPublisher | null;
+  private _metricCollectors: Storage<AbstractMetricCollector>;
+  private _scheduler: AbstractScheduler | null;
+  private _publisher: AbstractPublisher | null;
 
   private _collectedData = new MetricDataStorage();
 
   constructor() {
-    this._metricCollectors = new Storage<IMetricCollector>();
+    this._metricCollectors = new Storage<AbstractMetricCollector>();
     this._scheduler = null;
     this._publisher = null;
     this._status = Status.STOPED;
     this._collectedData.removeAll();
   }
 
-  public metricCollector(mcClass: new () => IMetricCollector) {
-    const mcInstance = new mcClass();
+  public metricCollector(
+    mcClass: new (...args: any) => AbstractMetricCollector,
+    ...args: any
+  ) {
+    const mcInstance = new mcClass(...args);
     this._metricCollectors.add(mcInstance);
     return this;
   }
 
-  public scheduler(schedulerClass: new () => IScheduler) {
-    this._scheduler = new schedulerClass();
+  public scheduler(
+    schedulerClass: new (...args: any) => AbstractScheduler,
+    ...args: any
+  ) {
+    this._scheduler = new schedulerClass(...args);
     return this;
   }
 
-  public publisher(publisherClass: new () => IPublisher) {
-    this._publisher = new publisherClass();
+  public publisher(
+    publisherClass: new (...args: any) => AbstractPublisher,
+    ...args: any
+  ) {
+    this._publisher = new publisherClass(...args);
     return this;
   }
 
-  public start() {
+  public async start(...args: any) {
     try {
       // If not an error which means it meet conditions to start.
       this.checkStartCondition();
 
       // We check _scheduler is defined at checkStartCondition function.
-      this._scheduler!.start();
-      // Registering _scheduler events.
-      this._scheduler!.on("collect", this.collectEventCallback);
-      this._scheduler!.on("publish", this.publishEventCallback);
+      this._scheduler!.start(...args);
+      // Registering _scheduler events.WW
+      this._scheduler!.on("collect", () => this.collectEventCallback());
+
+      this._scheduler!.on("publish", () => this.publishEventCallback());
 
       this._status = Status.STARTED;
     } catch (e: any) {
@@ -58,7 +69,7 @@ export default class Task {
     }
   }
 
-  public stop() {
+  public async stop() {
     try {
       // If not an error which means it meet conditions to start.
       this.checkStopCondition();
@@ -76,15 +87,15 @@ export default class Task {
     }
   }
 
-  public collectEventCallback() {
-    this._metricCollectors.forEach((mc: IMetricCollector) => {
+  private collectEventCallback() {
+    this._metricCollectors.forEach((mc: AbstractMetricCollector) => {
       mc.collect().then((data: MetricData | MetricData[]) => {
         this._collectedData.add(data);
       });
     });
   }
 
-  public publishEventCallback() {
+  private publishEventCallback() {
     this._collectedData.merge().then(() => {
       this._publisher!.publish(this._collectedData.getItems());
     });

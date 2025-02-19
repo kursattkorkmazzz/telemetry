@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "npx ts-node --esm .\\src\\development_index.ts",
+    "start": "npx tsx .\\src\\development_index.ts",
     "build": "node .\\builder.mjs"
   },
   "author": "Kürşat KORKMAZ",
@@ -16,7 +16,6 @@
     "esbuild": "0.25.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
-    "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
 }

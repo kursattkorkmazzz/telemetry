@@ -1,0 +1,22 @@
+{
+  "name": "telemetry_as",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npx ts-node --esm .\\src\\development_index.ts",
+    "build": "node .\\builder.mjs"
+  },
+  "author": "Kürşat KORKMAZ",
+  "license": "ISC",
+  "description": "Node tabanlı tüm projelerde analiz metriklerini toplamanıza yardımcı olan bir kütüphane.",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.4",
+    "esbuild": "0.25.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}

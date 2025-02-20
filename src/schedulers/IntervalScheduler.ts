@@ -1,6 +1,6 @@
-import Status from "src/core/enums/Status.js";
-import AbstractScheduler from "src/core/abstracts/AbstractScheduler.js";
-import ErrorCodes from "src/core/utils/errors/ErrorCodes.js";
+import AbstractScheduler from "@src/core/abstracts/AbstractScheduler";
+import Status from "@src/core/enums/Status";
+import ErrorCodes from "@src/core/utils/errors/ErrorCodes";
 
 export default class IntervalScheduler extends AbstractScheduler {
   status: Status;
@@ -11,10 +11,13 @@ export default class IntervalScheduler extends AbstractScheduler {
   private collectIntervalInMS: number;
   private publishIntervalInMS: number;
 
-  constructor(collectIntervalInMS: number, publishIntervalInMS: number) {
+  constructor(opts: {
+    collectIntervalInMS: number;
+    publishIntervalInMS: number;
+  }) {
     super();
-    this.collectIntervalInMS = collectIntervalInMS;
-    this.publishIntervalInMS = publishIntervalInMS;
+    this.collectIntervalInMS = opts.collectIntervalInMS;
+    this.publishIntervalInMS = opts.publishIntervalInMS;
     this.status = Status.STOPED;
   }
 

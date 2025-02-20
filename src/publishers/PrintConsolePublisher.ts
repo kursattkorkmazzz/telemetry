@@ -1,5 +1,5 @@
-import AbstractPublisher from "src/core/abstracts/AbstractPublisher.js";
-import MetricData from "src/core/types/MetricData.js";
+import AbstractPublisher from "@src/core/abstracts/AbstractPublisher";
+import MetricData from "@src/core/types/MetricData";
 
 export default class PrintConsolePublisher extends AbstractPublisher {
   override name: string = "Consoler Printer";

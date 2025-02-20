@@ -2,12 +2,12 @@ import * as esbuild from "esbuild";
 
 async function build() {
   await esbuild.build({
-    entryPoints: ["./src/**/*.ts"],
+    entryPoints: ["TelemetryAS.ts"],
     platform: "node",
     format: "esm",
-    outdir: "./build",
-    sourceRoot: "./src",
-
+    outdir: "./dist",
+    //    sourceRoot: "./src",
+    bundle: true,
     loader: {
       [".ts"]: "ts",
     },

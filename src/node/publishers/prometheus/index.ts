@@ -1,0 +1,1 @@
+export { PrometheusHistogramPublisher } from "./PrometheusHistogramPublisher";

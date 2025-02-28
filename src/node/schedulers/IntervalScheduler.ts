@@ -1,4 +1,4 @@
-import AbstractScheduler from "@src/node/core/abstracts/AbstractScheduler.js";
+import { AbstractScheduler } from "@src/node/core/abstracts/AbstractScheduler.js";
 import Status from "@src/node/core/enums/Status.js";
 import ErrorCodes from "@src/node/core/utils/errors/ErrorCodes.js";
 

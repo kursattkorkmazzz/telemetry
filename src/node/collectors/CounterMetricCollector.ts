@@ -1,21 +1,24 @@
-import AbstractMetricCollector from "@src/node/core/abstracts/AbstractMetricCollector";
+import { AbstractMetricCollector } from "@src/node/core/abstracts/AbstractMetricCollector";
 import MetricData from "@src/node/core/types/MetricData";
 
 export class CounterMetricCollector extends AbstractMetricCollector {
   counter: number = 0;
-  name: string = "";
-  constructor(collector_name?: string) {
+  metric_name: string;
+  labels?: Record<string, string>;
+
+  constructor(opts: { metric_name: string; labels?: Record<string, string> }) {
     super();
     this.counter = 0;
-    this.name = collector_name || "";
+    this.metric_name = opts.metric_name;
+    this.labels = opts.labels;
   }
 
   collect(): Promise<MetricData | MetricData[]> {
     return new Promise((resolve, reject) => {
       resolve({
+        metric_name: this.metric_name,
+        labels: this.labels,
         data: this.counter,
-        timestamp: Date.now(),
-        name: this.name,
       });
     });
   }

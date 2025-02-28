@@ -1,4 +1,4 @@
-import AbstractPublisher from "@src/node/core/abstracts/AbstractPublisher.js";
+import { AbstractPublisher } from "@src/node/core/abstracts/AbstractPublisher.js";
 import MetricData from "@src/node/core/types/MetricData.js";
 
 export class PrintConsolePublisher extends AbstractPublisher {
@@ -7,15 +7,14 @@ export class PrintConsolePublisher extends AbstractPublisher {
       this.printMetricData(data);
       return Promise.resolve();
     }
-
     data.forEach((md) => this.printMetricData(md));
     return Promise.resolve();
   }
 
   private printMetricData(data: MetricData) {
     console.log("========================");
-    console.log("Name: " + data.name);
-    console.log("Timestamps: " + data.timestamp);
+    console.log("Metric Name: " + data.metric_name);
+    console.log("Metric Labels: " + JSON.stringify(data.labels));
     console.log("Data: " + data.data);
     console.log("========================");
   }

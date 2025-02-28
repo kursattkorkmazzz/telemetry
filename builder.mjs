@@ -28,7 +28,12 @@ Promise.all([
   // Build for React
   esbuild.build({
     ...sharedConfig,
-    entryPoints: ["./src/react/index.ts", "./src/react/collectors/index.ts"],
+    entryPoints: [
+      "./src/react/index.ts",
+      "./src/react/collectors/index.ts",
+      "./src/react/publishers/index.ts",
+      "./src/react/schedulers/index.ts",
+    ],
     platform: "browser",
     jsx: "automatic",
     format: "esm",

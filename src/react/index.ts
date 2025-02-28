@@ -1,1 +1,1 @@
-export * as collector from "./collectors/index";
+export { TaskComponent, useTaskContext } from "./TaskComponent";

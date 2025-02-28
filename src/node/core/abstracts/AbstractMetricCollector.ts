@@ -1,6 +1,7 @@
 import MetricData from "../types/MetricData.js";
 
-export default abstract class AbstractMetricCollector {
-  abstract name: string;
+export abstract class AbstractMetricCollector {
+  abstract metric_name: string;
+  abstract labels?: Record<string, string>;
   abstract collect(): Promise<MetricData | MetricData[]>;
 }

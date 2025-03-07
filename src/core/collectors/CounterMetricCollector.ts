@@ -1,5 +1,5 @@
-import { AbstractMetricCollector } from "@src/node/core/abstracts/AbstractMetricCollector";
-import MetricData from "@src/node/core/types/MetricData";
+import { AbstractMetricCollector } from "../core/abstracts/AbstractMetricCollector";
+import MetricData from "../core/types/MetricData";
 
 export class CounterMetricCollector extends AbstractMetricCollector {
   counter: number = 0;

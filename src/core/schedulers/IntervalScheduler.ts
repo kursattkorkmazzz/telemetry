@@ -1,6 +1,6 @@
-import { AbstractScheduler } from "@src/node/core/abstracts/AbstractScheduler.js";
-import Status from "@src/node/core/enums/Status.js";
-import ErrorCodes from "@src/node/core/utils/errors/ErrorCodes.js";
+import {AbstractScheduler} from "../core/abstracts/AbstractScheduler";
+import Status from "../core/enums/Status";
+import ErrorCodes from "../core/utils/errors/ErrorCodes";
 
 export class IntervalScheduler extends AbstractScheduler {
   status: Status;

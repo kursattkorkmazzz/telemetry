@@ -19,10 +19,10 @@ Promise.all([
   // Build for Node
   esbuild.build({
     ...sharedConfig,
-    entryPoints: ["./src/node/index.ts"],
+    entryPoints: ["./src/core/index.ts"],
     platform: "node",
     format: "esm",
-    outfile: "./dist/node/index.js",
+    outfile: "./dist/core/index.js",
     external: ["events", "os"],
   }),
   // Build for React

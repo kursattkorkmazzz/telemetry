@@ -1,5 +1,5 @@
-import { AbstractPublisher } from "@src/node/core/abstracts/AbstractPublisher.js";
-import MetricData from "@src/node/core/types/MetricData.js";
+import {AbstractPublisher} from "../core/abstracts/AbstractPublisher";
+import MetricData from "../core/types/MetricData";
 
 export class PrintConsolePublisher extends AbstractPublisher {
   override publish(data: MetricData | Array<MetricData>): Promise<void> {

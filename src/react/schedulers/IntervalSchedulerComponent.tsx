@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import { TaskContext, useTaskContext } from "../TaskComponent";
-import { IntervalScheduler } from "@src/node";
+import React, { useState } from "react";
+import { useTaskContext } from "../TaskComponent";
+import { IntervalScheduler } from "../../core/schedulers/IntervalScheduler";
 
 type IntervalSchedulerProps = {
   collectIntervalInMS: number;
@@ -8,18 +8,13 @@ type IntervalSchedulerProps = {
 };
 
 export function IntervalSchedulerComponent(props: IntervalSchedulerProps) {
-  const task = useContext(TaskContext);
+  const task = useTaskContext();
   const [scheduler, _] = useState(
     new IntervalScheduler({
       collectIntervalInMS: props.collectIntervalInMS,
       publishIntervalInMS: props.publishIntervalInMS,
     })
   );
-
-  useEffect(() => {
-    task?.setScheduler(scheduler);
-  }, [task, scheduler]);
-
   console.log("Interval Scheduler Task Context: ", task);
 
   return <></>;

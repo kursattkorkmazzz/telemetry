@@ -1,4 +1,4 @@
-import ErrorCodes from "@src/node/core/utils/errors/ErrorCodes.js";
+import ErrorCodes from "../../utils/errors/ErrorCodes";
 
 /**
  * A generic storage class that provides methods to add, remove, and retrieve items.

@@ -1,38 +1,19 @@
 {
   "name": "telemetry_as",
   "version": "1.0.0",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "type": "module",
   "files": [
     "dist",
     "*.d.ts"
   ],
   "exports": {
-    ".": {
-      "import": "./dist/node/index.js",
-      "types": "./dist/types/node/index.d.ts"
-    },
-    "./react": {
-      "import": "./dist/react/index.js",
-      "types": "./dist/types/react/index.d.ts"
-    },
-    "./react/collectors": {
-      "import": "./dist/react/collectors/index.js",
-      "types": "./dist/types/react/collectors/index.d.ts"
-    },
-    "./react/publishers": {
-      "import": "./dist/react/publishers/index.js",
-      "types": "./dist/types/react/publishers/index.d.ts"
-    },
-    "./react/schedulers": {
-      "import": "./dist/react/schedulers/index.js",
-      "types": "./dist/types/react/schedulers/index.d.ts"
-    }
+    "./core": "./src/core/index.ts",
+    "./react": "./src/react/index.ts",
+    "./react/*.ts": "./src/react/*.ts"
   },
   "scripts": {
-    "start": "npx tsx ./src/development_index.ts",
-    "build": "rd /s /q \"./dist\" && node ./builder.mjs && npx tsc -p tsconfig.declaration.json"
+    "start": "npx tsx ./tests/core_test.ts",
+    "build": "node ./builder.mjs && npx tsc -p tsconfig.declaration.json"
   },
   "author": "Kürşat KORKMAZ",
   "license": "ISC",

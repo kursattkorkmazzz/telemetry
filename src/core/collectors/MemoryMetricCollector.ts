@@ -1,5 +1,5 @@
-import { AbstractMetricCollector } from "@src/node/core/abstracts/AbstractMetricCollector.js";
-import MetricData from "@src/node/core/types/MetricData.js";
+import { AbstractMetricCollector } from "../core/abstracts/AbstractMetricCollector";
+import MetricData from "../core/types/MetricData";
 import os from "os";
 
 export class MemoryMetricCollector extends AbstractMetricCollector {

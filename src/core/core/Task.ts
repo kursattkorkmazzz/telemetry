@@ -1,7 +1,8 @@
-import AbstractMetricCollector from "./abstracts/AbstractMetricCollector.js";
-import AbstractPublisher from "./abstracts/AbstractPublisher.js";
-import AbstractScheduler from "./abstracts/AbstractScheduler.js";
+import { AbstractMetricCollector } from "./abstracts/AbstractMetricCollector.js";
+import { AbstractPublisher } from "./abstracts/AbstractPublisher.js";
+import { AbstractScheduler } from "./abstracts/AbstractScheduler.js";
 import Status from "./enums/Status.js";
+import { MetricDataStorage } from "./libs/storage/MetricDataStorage.js";
 
 import Storage from "./libs/storage/Storage.js";
 import MetricData from "./types/MetricData.js";
@@ -14,14 +15,14 @@ export class Task {
   public scheduler: AbstractScheduler | null;
   public publisher: AbstractPublisher | null;
 
-  private _collectedData = new Storage<MetricData>();
+  public _collectedData = new MetricDataStorage();
 
   constructor() {
     this.metricCollectors = new Storage<AbstractMetricCollector>();
     this.publisher = null;
     this.scheduler = null;
     this._status = Status.STOPED;
-    this._collectedData.removeAll();
+    this._collectedData.clear();
   }
 
   public async start() {
@@ -70,8 +71,8 @@ export class Task {
   }
 
   private publishEventCallback() {
-    this.publisher!.publish(this._collectedData.getItems());
-    this._collectedData.removeAll();
+    this.publisher!.publish(this._collectedData.getAll());
+    this._collectedData.clear();
   }
 
   /**

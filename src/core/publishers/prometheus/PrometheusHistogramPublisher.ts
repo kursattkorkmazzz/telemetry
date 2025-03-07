@@ -2,7 +2,7 @@ import MetricData from "../../core/types/MetricData";
 import { PrometheusPublisher } from "./core/PrometheusPublisher";
 import client from "prom-client";
 import axios from "axios";
-import GroupMetricsByName from "@src/node/core/utils/metric_data/GroupMetricsByName";
+import { MetricDataStorageType } from "src/core/core/libs/storage/MetricDataStorage";
 
 export class PrometheusHistogramPublisher extends PrometheusPublisher {
   prometheus_url: string;
@@ -20,42 +20,44 @@ export class PrometheusHistogramPublisher extends PrometheusPublisher {
     this.buckets = opts.buckets;
   }
 
-  async publish(items: MetricData[]): Promise<void> {
+  async publish(items: MetricDataStorageType): Promise<void> {
     try {
-      const grouped_metrics: MetricData[][] = GroupMetricsByName(items);
+      const payloadString = (
+        await Promise.all(
+          Object.values(items).map(async (metricGroup: MetricData[]) => {
+            let subPayloadString = "";
+            subPayloadString += await this.createHistogramPayloadForData(
+              metricGroup
+            );
 
-      const payloadArray = await Promise.all(
-        grouped_metrics.map(
-          async (group: MetricData[]) =>
-            await this.createHistogramPayloadForData(group)
+            return subPayloadString;
+          })
         )
-      );
+      ).join("\n");
 
-      const metricPayload = payloadArray.join("\n");
-
-      await this.sendToPrometheus(metricPayload);
+      await this.sendToPrometheus(payloadString);
     } catch (e) {
       throw e;
     }
   }
 
-  private async createHistogramPayloadForData(data: MetricData[]) {
+  private async createHistogramPayloadForData(metrics: MetricData[]) {
     const localRegistry = new client.Registry();
 
     let histogramMetric = new client.Histogram({
-      name: data[0].metric_name,
+      name: metrics[0].metric_name,
       help: this.help || "",
-      labelNames: data[0].labels ? Object.keys(data[0].labels) : [],
+      labelNames: metrics[0].labels ? Object.keys(metrics[0].labels) : [],
       buckets: this.buckets,
       registers: [localRegistry],
     });
 
-    data.forEach((data) => {
-      if (typeof data.data === "number") {
-        if (data.labels) {
-          histogramMetric.observe(data.labels, data.data);
+    metrics.forEach((metrics) => {
+      if (typeof metrics.data === "number") {
+        if (metrics.labels) {
+          histogramMetric.observe(metrics.labels, metrics.data);
         } else {
-          histogramMetric.observe(data.data);
+          histogramMetric.observe(metrics.data);
         }
       }
     });
@@ -79,6 +81,7 @@ export class PrometheusHistogramPublisher extends PrometheusPublisher {
         `Failed to send data to Prometheus. Status: ${response.status}`
       );
     } catch (e) {
+      console.log(payload);
       throw e;
     }
   }

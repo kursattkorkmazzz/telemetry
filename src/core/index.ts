@@ -1,8 +1,8 @@
 // High Level Object
-export { Task } from "@src/node/core/Task.js";
+export { Task } from "./core/Task.js";
 
 // Schedulers
-export { IntervalScheduler } from "@src/node/schedulers/IntervalScheduler.js";
+export { IntervalScheduler } from "./schedulers/IntervalScheduler.js";
 
 // Publishers
 export { PrintConsolePublisher } from "./publishers/PrintConsolePublisher.js";
@@ -13,7 +13,9 @@ export { MemoryMetricCollector } from "./collectors/MemoryMetricCollector.js";
 export { CounterMetricCollector } from "./collectors/CounterMetricCollector.js";
 
 // Core Abstracts
-
 export { AbstractMetricCollector } from "./core/abstracts/AbstractMetricCollector.js";
 export { AbstractPublisher } from "./core/abstracts/AbstractPublisher.js";
 export { AbstractScheduler } from "./core/abstracts/AbstractScheduler.js";
+
+
+

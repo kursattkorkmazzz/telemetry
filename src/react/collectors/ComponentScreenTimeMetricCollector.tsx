@@ -1,5 +1,5 @@
 import React from "react";
-import { CounterMetricCollector } from "@src/node/collectors/CounterMetricCollector";
+import { CounterMetricCollector } from "../../core/index";
 import { HTMLAttributes, useEffect, useRef, useState } from "react";
 
 type ComponentScreenTimeMetricCollectorProps =

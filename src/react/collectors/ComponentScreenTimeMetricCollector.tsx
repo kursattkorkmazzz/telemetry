@@ -1,21 +1,23 @@
 import React from "react";
-import { CounterMetricCollector } from "../../core/index";
 import { HTMLAttributes, useEffect, useRef, useState } from "react";
+import { CollectorComponentProps } from "../types/CollectorComponentProps";
+import { InstantMetricCollector } from "../../core/index";
+import { useTaskContext } from "../TaskComponent";
 
-type ComponentScreenTimeMetricCollectorProps =
-  HTMLAttributes<HTMLDivElement> & {
-    metric_name: string;
-    labels?: Record<string, string>;
-  };
+type ComponentScreenTimeMetricCollectorProps = HTMLAttributes<HTMLDivElement> &
+  CollectorComponentProps;
 
 // This will need telemetry provider to register Task to TelemetryAS. It will create task for specific purpose.
 export function ComponentScreenTimeMetricCollector(
   props: ComponentScreenTimeMetricCollectorProps
 ) {
   const ref = useRef<HTMLDivElement>(null);
+  const task = useTaskContext();
+
+  console.log("Task: ", task);
 
   const [metricCollector, _] = useState(
-    new CounterMetricCollector({
+    new InstantMetricCollector({
       metric_name: props.metric_name,
       labels: props.labels,
     })
@@ -59,7 +61,7 @@ export function ComponentScreenTimeMetricCollector(
 
   // Metric Collector is adjusting.
   useEffect(() => {
-    metricCollector.counter = screenTime;
+    metricCollector.set(screenTime);
   }, [screenTime]);
 
   return <div ref={ref}>{props.children}</div>;

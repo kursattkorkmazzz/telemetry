@@ -1,6 +1,11 @@
 import { AbstractMetricCollector } from "../core/abstracts/AbstractMetricCollector";
 import MetricData from "../core/types/MetricData";
 
+
+
+
+
+
 export class CounterMetricCollector extends AbstractMetricCollector {
   counter: number = 0;
   metric_name: string;
@@ -25,9 +30,5 @@ export class CounterMetricCollector extends AbstractMetricCollector {
 
   increment(amount?: number) {
     this.counter += amount || 1;
-  }
-
-  decrement(amount?: number) {
-    this.counter -= amount || 1;
   }
 }

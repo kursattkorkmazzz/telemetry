@@ -1,5 +1,8 @@
+export * from "./configurer";
 
-export * from "./TaskComponent";
-export * from "./collectors/index";
+export * from "./collectors";
 export * from "./schedulers";
 export * from "./publishers";
+
+export * from "./TaskComponent";
+export * from "./configurer/TelemetryConfigurationManager";

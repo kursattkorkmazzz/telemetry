@@ -3,50 +3,42 @@
   "version": "1.0.0",
   "type": "module",
   "files": [
-    "dist",
-    "*.d.ts"
+    "dist"
   ],
-  "exports": {
-    "./core": "./src/core/index.ts",
-    "./react": "./src/react/index.ts",
-    "./react/pollyfills": "./src/react/pollyfills/index.ts"
-  },
   "scripts": {
-    "start": "npx tsx ./tests/core_test.ts",
-    "build": "node ./builder.mjs && npx tsc -p tsconfig.declaration.json"
+    "start": "npx tsx ./src/trying.ts",
+    "build": "npx tsup",
+    "build:watch": "npx tsup --watch ."
+  },
+  "exports": {
+    "./react": {
+      "import": "./dist/react/index.js",
+      "types": "./dist/react/index.d.ts"
+    },
+    "./core": {
+      "import": "./dist/core/index.js",
+      "types": "./dist/core/index.d.ts"
+    }
   },
   "author": "Kürşat KORKMAZ",
   "license": "ISC",
   "description": "Node tabanlı tüm projelerde analiz metriklerini toplamanıza yardımcı olan bir kütüphane.",
   "devDependencies": {
-    "@types/jest": "^29.5.14",
+    "@microsoft/api-extractor": "^7.51.1",
     "@types/node": "^22.13.4",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
     "esbuild": "0.25.0",
     "esbuild-node-externals": "^1.18.0",
-    "jest": "^29.7.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "ts-jest": "^29.2.5",
-    "tsc-alias": "^1.8.10",
+    "esbuild-plugin-polyfill-node": "^0.3.0",
+    "tsup": "^8.4.0",
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "axios": "^1.8.1",
-    "esbuild-plugin-polyfill-node": "^0.3.0",
-    "prom-client": "^15.1.3"
+    "axios": "^1.8.1"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4"
-  },
-  "resolutions": {
+    "@types/react-dom": "^19.0.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4"
+    "react-dom": "^19.0.0"
   }
 }

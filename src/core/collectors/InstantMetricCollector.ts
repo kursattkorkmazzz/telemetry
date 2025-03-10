@@ -16,6 +16,7 @@ export class InstantMetricCollector extends CounterMetricCollector {
       });
     });
   }
+
   set(data: number) {
     this.counter = data;
   }

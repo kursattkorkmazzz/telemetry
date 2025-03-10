@@ -1,6 +1,6 @@
 import MetricData from "../../core/types/MetricData";
 import { PrometheusPublisher } from "./core/PrometheusPublisher";
-import client from "prom-client";
+
 import axios from "axios";
 import { MetricDataStorageType } from "src/core/core/libs/storage/MetricDataStorage";
 
@@ -42,6 +42,7 @@ export class PrometheusHistogramPublisher extends PrometheusPublisher {
   }
 
   private async createHistogramPayloadForData(metrics: MetricData[]) {
+    /* TODO: Implement this function after Prometheus client library written.
     const localRegistry = new client.Registry();
 
     let histogramMetric = new client.Histogram({
@@ -63,6 +64,8 @@ export class PrometheusHistogramPublisher extends PrometheusPublisher {
     });
 
     return await localRegistry.metrics();
+    */
+    return [];
   }
 
   public async sendToPrometheus(payload: string) {

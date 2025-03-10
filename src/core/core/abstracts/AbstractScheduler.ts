@@ -1,5 +1,5 @@
+import { EventEmitter } from "events";
 import Status from "../enums/Status.js";
-import { EventEmitter } from "../utils/EventEmitter.js";
 
 export abstract class AbstractScheduler extends EventEmitter {
   abstract status: Status;

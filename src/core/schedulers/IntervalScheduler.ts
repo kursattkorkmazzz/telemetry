@@ -1,6 +1,6 @@
-import {AbstractScheduler} from "../core/abstracts/AbstractScheduler";
-import Status from "../core/enums/Status";
-import ErrorCodes from "../core/utils/errors/ErrorCodes";
+import { AbstractScheduler } from "../abstracts/AbstractScheduler";
+import Status from "../enums/Status";
+import ErrorCodes from "../utils/errors/ErrorCodes";
 
 export class IntervalScheduler extends AbstractScheduler {
   status: Status;

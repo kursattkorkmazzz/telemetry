@@ -1,5 +1,5 @@
-import {AbstractPublisher} from "../core/abstracts/AbstractPublisher";
-import MetricData from "../core/types/MetricData";
+import { AbstractPublisher } from "../abstracts/AbstractPublisher";
+import MetricData from "../types/MetricData";
 
 export class PrintConsolePublisher extends AbstractPublisher {
   override publish(data: MetricData | Array<MetricData>): Promise<void> {

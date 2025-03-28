@@ -1,5 +1,5 @@
 import { MetricDataStorageType } from "src/core/core/libs/storage/MetricDataStorage";
-import { AbstractPublisher } from "../../../core/abstracts/AbstractPublisher";
+import { AbstractPublisher } from "../../../abstracts/AbstractPublisher";
 
 export abstract class PrometheusPublisher extends AbstractPublisher {
   abstract prometheus_url: string;

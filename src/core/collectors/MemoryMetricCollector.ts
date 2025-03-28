@@ -1,5 +1,5 @@
-import { AbstractMetricCollector } from "../core/abstracts/AbstractMetricCollector";
-import MetricData from "../core/types/MetricData";
+import { AbstractMetricCollector } from "../abstracts/AbstractMetricCollector";
+import MetricData from "../types/MetricData";
 import os from "os";
 
 export class MemoryMetricCollector extends AbstractMetricCollector {

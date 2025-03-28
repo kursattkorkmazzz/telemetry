@@ -1,6 +1,6 @@
 import React from "react";
 import { createContext, useState, useContext } from "react";
-import { AbstractPublisher } from "src/core/core/abstracts/AbstractPublisher";
+import { AbstractPublisher } from "src/core/abstracts/AbstractPublisher";
 
 type TaskContextType = {
   publish: (data: unknown) => void;

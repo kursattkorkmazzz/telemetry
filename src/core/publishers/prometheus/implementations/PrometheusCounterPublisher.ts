@@ -1,6 +1,6 @@
-import { MetricDataStorageType } from "src/core/core/libs/storage/MetricDataStorage";
-import { PrometheusPublisher } from "./core/PrometheusPublisher";
-import MetricData from "src/core/core/types/MetricData";
+import { MetricDataStorageType } from "src/core/libs/storage/MetricDataStorage";
+import { PrometheusPublisher } from "../abstracts/PrometheusPublisher";
+import MetricData from "src/core/types/MetricData";
 import axios from "axios";
 
 export class PrometheusCounterPublisher extends PrometheusPublisher {

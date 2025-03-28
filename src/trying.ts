@@ -1,6 +1,6 @@
 import { Task } from "./core";
 import { CounterMetricCollector } from "./core/collectors/CounterMetricCollector";
-import { PrometheusCounterPublisher } from "./core/publishers/prometheus/PrometheusCounterPublisher";
+import { PrometheusCounterPublisher } from "./core/publishers/prometheus/implementations/PrometheusCounterPublisher";
 import { IntervalScheduler } from "./core/schedulers/IntervalScheduler";
 
 const clickEventCollector = new CounterMetricCollector({

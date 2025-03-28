@@ -1,4 +1,4 @@
-import MetricData from "../core/types/MetricData";
+import MetricData from "../types/MetricData";
 import { CounterMetricCollector } from "./CounterMetricCollector";
 
 export class InstantMetricCollector extends CounterMetricCollector {

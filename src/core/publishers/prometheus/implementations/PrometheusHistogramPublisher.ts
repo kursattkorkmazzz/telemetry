@@ -1,8 +1,8 @@
-import MetricData from "../../core/types/MetricData";
-import { PrometheusPublisher } from "./core/PrometheusPublisher";
+import MetricData from "../../../types/MetricData";
+import { PrometheusPublisher } from "../abstracts/PrometheusPublisher";
 
 import axios from "axios";
-import { MetricDataStorageType } from "src/core/core/libs/storage/MetricDataStorage";
+import { MetricDataStorageType } from "src/core/libs/storage/MetricDataStorage";
 
 export class PrometheusHistogramPublisher extends PrometheusPublisher {
   prometheus_url: string;

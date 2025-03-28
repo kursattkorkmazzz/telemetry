@@ -1,9 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { HTMLAttributes } from "react";
 import { CounterMetricCollector } from "src/core";
 import { useTelemetryConfiguration } from "../configurer/TelemetryConfigurationManager";
-import { MetricDataStorage } from "src/core/core/libs/storage/MetricDataStorage";
+import { MetricDataStorage } from "src/core/libs/storage/MetricDataStorage";
 import { useTaskContext } from "../TaskComponent";
+import MetricData from "src/core/types/MetricData";
 
 type ComponentEventCollectorProps = HTMLAttributes<HTMLDivElement> & {
   tracking_event: (keyof HTMLElementEventMap)[];
@@ -13,17 +20,9 @@ type ComponentEventCollectorProps = HTMLAttributes<HTMLDivElement> & {
 export function ComponentEventCollector(props: ComponentEventCollectorProps) {
   const configuration = useTelemetryConfiguration();
   const taskContext = useTaskContext();
-
-  const [publishHandler, setPublisherHandler] = useState<() => void>(() => {});
-  const [sending, setSending] = useState(false);
   const parentRef = useRef<HTMLDivElement>(null);
 
-  const [metricCollectorList, setMetricCollectors] = useState<
-    CounterMetricCollector[]
-  >([]);
-  const [metricStorage, setMetricStorage] = useState<MetricDataStorage>(
-    new MetricDataStorage()
-  );
+  const [state, dispatch] = useReducer(MetricDataStorageReducer, []);
 
   useEffect(() => {
     if (parentRef.current) {
@@ -37,22 +36,15 @@ export function ComponentEventCollector(props: ComponentEventCollectorProps) {
           component: children.tagName.toLowerCase(),
           component_id: children.id || "no_id",
         };
-
-        const mc = new CounterMetricCollector({
-          metric_name: "react_component_events_counter",
-          labels: labels,
-        });
-        setMetricCollectors((prev) => [...prev, mc]);
-
         // Data Collection PART
         children.addEventListener(event_type, () => {
-          mc.increment(1);
-          setMetricCollectors((prev) => {
-            const filtered = prev.filter(
-              (mc) => JSON.stringify(mc.labels) !== JSON.stringify(labels)
-            );
-            filtered.push(mc);
-            return [...filtered];
+          dispatch({
+            type: "load",
+            payload: {
+              metric_name: "component_event",
+              labels: labels,
+              data: 1,
+            },
           });
         });
       });
@@ -61,41 +53,25 @@ export function ComponentEventCollector(props: ComponentEventCollectorProps) {
 
   // 2. Adjusting publishing data scheduling.
   useEffect(() => {
-    window.addEventListener("beforeunload", publishHandler);
-    window.addEventListener("close", publishHandler);
+    /* TODO
+    window.addEventListener("beforeunload", );
+    window.addEventListener("close", );
     return () => {
-      window.removeEventListener("beforeunload", publishHandler);
-      window.addEventListener("close", publishHandler);
-    };
-  }, [metricCollectorList]);
+      window.removeEventListener("beforeunload", );
+      window.addEventListener("close", );
+    };*/
+  }, []);
 
-  useEffect(() => {
-    setPublisherHandler(() => {
-      setSending(true);
-      const mds = new MetricDataStorage();
-      metricCollectorList.forEach((metric) => {
-        mds.add({
-          data: metric.counter,
-          metric_name: metric.metric_name,
-          labels: metric.labels,
-        });
-      });
-      taskContext.publish(mds.getAll());
-    });
-  }, [metricCollectorList]);
-
-  useEffect(() => {
-    if (sending) {
-      setMetricCollectors((prev) => {
-        const filtered = prev.map((mc) => {
-          mc.counter = 0;
-          return mc;
-        });
-
-        return [...filtered];
-      });
-      setSending(false);
-    }
-  }, [sending]);
   return <div {...props} ref={parentRef} />;
+}
+
+/**  REDUCER and TYPES  */
+
+type ActionType = {
+  type: "load" | "clear";
+  payload: MetricData;
+};
+
+function MetricDataStorageReducer(prev: MetricData[], action: ActionType) {
+  return prev;
 }

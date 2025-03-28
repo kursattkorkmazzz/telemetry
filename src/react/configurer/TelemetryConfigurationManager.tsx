@@ -3,6 +3,7 @@ import { createContext, ReactNode, useContext } from "react";
 import { ConfigurationType } from "./types/ConfigurationType";
 import { configurationDefaults } from "./ConfigurationDefault";
 
+
 const TelemetryConfigurationManagerContext = createContext<ConfigurationType>(
   configurationDefaults
 );

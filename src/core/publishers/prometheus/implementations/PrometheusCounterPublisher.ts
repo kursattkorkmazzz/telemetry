@@ -1,7 +1,11 @@
-import { MetricDataStorageType } from "src/core/libs/storage/MetricDataStorage";
+import {
+  MetricDataStorage,
+  MetricDataStorageType,
+} from "src/core/utils/storage/MetricDataStorage";
 import { PrometheusPublisher } from "../abstracts/PrometheusPublisher";
 import MetricData from "src/core/types/MetricData";
 import axios from "axios";
+import sendPayloadToPrometheus from "../utils/send-payload";
 
 export class PrometheusCounterPublisher extends PrometheusPublisher {
   prometheus_url: string;
@@ -13,14 +17,13 @@ export class PrometheusCounterPublisher extends PrometheusPublisher {
     this.help = opts.help;
   }
 
-  public async publish(items: MetricDataStorageType): Promise<void> {
+  public async publish(data: MetricData[]): Promise<void> {
     try {
-      const payload = this.createPayload(items);
-
-      await this.sendRequest(payload);
-
+      const storage = new MetricDataStorage();
+      storage.add(data);
+      const payload = this.createPayload(storage.getAll());
+      await sendPayloadToPrometheus(this.prometheus_url, payload);
       console.log("✅ Data sent to Prometheus.");
-
       return Promise.resolve();
     } catch (e) {
       console.log("❌ Error sending data to Prometheus.\n", e);
@@ -50,25 +53,5 @@ export class PrometheusCounterPublisher extends PrometheusPublisher {
         return helpString + typeString + payloads.join("\n");
       })
       .join("\n");
-  }
-
-  private async sendRequest(payload: string): Promise<void> {
-    try {
-      const response = await axios.post(this.prometheus_url, payload, {
-        headers: {
-          "Content-Type": "text/plain; version=0.0.4; charset=utf-8",
-          "User-Agent": "Prometheus/4.0",
-          "Content-Encoding": "gzip",
-        },
-      });
-      if (response.status == 202) {
-        return;
-      }
-      throw new Error(
-        `Failed to send data to Prometheus. Status: ${response.status}`
-      );
-    } catch (e) {
-      throw e;
-    }
   }
 }

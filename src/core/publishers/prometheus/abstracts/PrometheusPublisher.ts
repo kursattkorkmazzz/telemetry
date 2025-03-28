@@ -1,5 +1,6 @@
-import { MetricDataStorageType } from "src/core/core/libs/storage/MetricDataStorage";
+import { MetricDataStorageType } from "src/core/utils/storage/MetricDataStorage";
 import { AbstractPublisher } from "../../../abstracts/AbstractPublisher";
+import MetricData from "src/core/types/MetricData";
 
 export abstract class PrometheusPublisher extends AbstractPublisher {
   abstract prometheus_url: string;
@@ -10,5 +11,5 @@ export abstract class PrometheusPublisher extends AbstractPublisher {
   protected readonly contentEncoding = "gzip";
 
   // We assume <MetricData[]> contains data with same metric name.
-  abstract publish(items: MetricDataStorageType): Promise<void>;
+  abstract publish(items: MetricData[]): Promise<void>;
 }

@@ -11,19 +11,6 @@ export default defineConfig({
     ".tsx": "tsx",
   },
   shims: true,
-  esbuildPlugins: [
-    polyfillNode({
-      globals: {
-        global: true,
-        process: true,
-      },
-      polyfills: {
-        process: true,
-        events: true,
-        buffer: true,
-      },
-    }),
-  ],
   async onSuccess() {
     console.log("✅ Build başarılı.");
   },

@@ -1,1 +1,0 @@
-export { IntervalSchedulerComponent } from "./IntervalSchedulerComponent";

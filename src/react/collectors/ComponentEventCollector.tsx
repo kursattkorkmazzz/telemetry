@@ -1,77 +1,66 @@
 import React, {
-  useCallback,
+  Children,
+  cloneElement,
+  ReactElement,
+  ReactNode,
   useEffect,
-  useReducer,
   useRef,
   useState,
 } from "react";
-import { HTMLAttributes } from "react";
-import { CounterMetricCollector } from "src/core";
-import { useTelemetryConfiguration } from "../configurer/TelemetryConfigurationManager";
-import { MetricDataStorage } from "src/core/libs/storage/MetricDataStorage";
-import { useTaskContext } from "../TaskComponent";
-import MetricData from "src/core/types/MetricData";
 
-type ComponentEventCollectorProps = HTMLAttributes<HTMLDivElement> & {
-  tracking_event: (keyof HTMLElementEventMap)[];
-  publish_every_ms?: number;
+import MetricData from "src/core/types/MetricData";
+import { useTelemetry } from "../providers";
+
+type ComponentEventCollectorProps = {
+  tracking_event: Omit<
+    keyof React.DOMAttributes<HTMLElement>,
+    "children" | "dangerouslySetInnerHTML"
+  >[];
+  children?: ReactElement;
 };
 
 export function ComponentEventCollector(props: ComponentEventCollectorProps) {
-  const configuration = useTelemetryConfiguration();
-  const taskContext = useTaskContext();
-  const parentRef = useRef<HTMLDivElement>(null);
+  const telemetry = useTelemetry();
+  const [clonedChildren, setClonedChildren] = useState<ReactElement | null>(
+    null
+  );
 
-  const [state, dispatch] = useReducer(MetricDataStorageReducer, []);
+  // This function handles what happened when specific event occurs.
+  // It creates a metric data object and publishes it to the telemetry system.
+  const eventHandler = (e: Event) => {
+    const labels = {
+      event_type: e.type,
+      component: (e as any).target.tagName,
+      component_id: (e as any).target.id || "no_id",
+    };
+    const metricData: MetricData = {
+      metric_name: "react_component_events",
+      labels: labels,
+      data: 1,
+    };
+    telemetry.publish([metricData]);
+  };
 
   useEffect(() => {
-    if (parentRef.current) {
-      const children = parentRef.current.children[0] as HTMLElement;
+    const eventHandlers = props.tracking_event.reduce((handlers, eventType) => {
+      const currentHandler = ((props.children as ReactElement).props as any)[
+        eventType as string
+      ];
 
-      // Configuration PART
-      props.tracking_event.forEach((event_type: string) => {
-        const labels = {
-          project_name: configuration.project_name,
-          event_type: event_type,
-          component: children.tagName.toLowerCase(),
-          component_id: children.id || "no_id",
-        };
-        // Data Collection PART
-        children.addEventListener(event_type, () => {
-          dispatch({
-            type: "load",
-            payload: {
-              metric_name: "component_event",
-              labels: labels,
-              data: 1,
-            },
-          });
-        });
-      });
-    }
-  }, [parentRef]);
+      handlers[eventType as string] = (e: Event) => {
+        eventHandler(e);
+        if (typeof currentHandler === "function") {
+          currentHandler(e);
+        }
+      };
+      return handlers;
+    }, {} as Record<string, (e: Event) => void>);
 
-  // 2. Adjusting publishing data scheduling.
-  useEffect(() => {
-    /* TODO
-    window.addEventListener("beforeunload", );
-    window.addEventListener("close", );
-    return () => {
-      window.removeEventListener("beforeunload", );
-      window.addEventListener("close", );
-    };*/
-  }, []);
+    const clonned = cloneElement(props.children as ReactElement, {
+      ...eventHandlers,
+    });
+    setClonedChildren(clonned);
+  }, [props.children]);
 
-  return <div {...props} ref={parentRef} />;
-}
-
-/**  REDUCER and TYPES  */
-
-type ActionType = {
-  type: "load" | "clear";
-  payload: MetricData;
-};
-
-function MetricDataStorageReducer(prev: MetricData[], action: ActionType) {
-  return prev;
+  return clonedChildren || null;
 }

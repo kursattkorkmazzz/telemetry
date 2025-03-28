@@ -1,4 +1,4 @@
-import ErrorCodes from "../../utils/errors/ErrorCodes";
+import ErrorCodes from "../errors/ErrorCodes";
 
 /**
  * A generic storage class that provides methods to add, remove, and retrieve items.

@@ -1,1 +1,1 @@
-export { PrometheusHistogramPublisherComponent } from "./prometheus/PrometheusHistogramPublisherComponent";
+export * from "./prometheus";

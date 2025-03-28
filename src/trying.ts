@@ -1,4 +1,4 @@
-import { Task } from "./core";
+/*import { Task } from "./core";
 import { CounterMetricCollector } from "./core/collectors/CounterMetricCollector";
 import { PrometheusCounterPublisher } from "./core/publishers/prometheus/implementations/PrometheusCounterPublisher";
 import { IntervalScheduler } from "./core/schedulers/IntervalScheduler";
@@ -56,3 +56,4 @@ setInterval(() => {
   hoverEventCollector.increment(Math.floor(Math.random() * 10));
   componentScreenTimeCollector.increment(Math.floor(Math.random() * 100));
 }, 500);
+*/

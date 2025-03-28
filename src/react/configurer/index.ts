@@ -1,1 +1,0 @@
-export { TelemetryConfigurationManager } from "./TelemetryConfigurationManager";

@@ -1,3 +1,4 @@
+/*
 import React from "react";
 import { HTMLAttributes, useEffect, useRef, useState } from "react";
 import { CollectorComponentProps } from "../types/CollectorComponentProps";
@@ -66,3 +67,4 @@ export function ComponentScreenTimeMetricCollector(
 
   return <div ref={ref}>{props.children}</div>;
 }
+*/

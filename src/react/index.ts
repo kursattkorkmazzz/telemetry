@@ -1,8 +1,17 @@
-export * from "./configurer";
+import { ComponentEventCollector } from "./collectors";
+import { TelemetryProvider } from "./providers";
+import PrometheusCounterPublisherComponent from "./publishers/prometheus/counter-publisher";
 
-export * from "./collectors";
-export * from "./schedulers";
-export * from "./publishers";
+const Telemetry = {
+  Provider: TelemetryProvider,
+  Publishers: {
+    Prometheus: {
+      Counter: PrometheusCounterPublisherComponent,
+    },
+  },
+  Collectors: {
+    ComponentEventCollector,
+  },
+};
 
-export * from "./TaskComponent";
-export * from "./configurer/TelemetryConfigurationManager";
+export default Telemetry;

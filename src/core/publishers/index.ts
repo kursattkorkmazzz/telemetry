@@ -1,2 +1,2 @@
-export { PrometheusHistogramPublisher } from "./prometheus";
+export * from "./prometheus";
 export { PrintConsolePublisher } from "./PrintConsolePublisher";

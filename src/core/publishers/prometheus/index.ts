@@ -1,1 +1,1 @@
-export { PrometheusHistogramPublisher } from "./implementations/PrometheusHistogramPublisher";
+export { PrometheusCounterPublisher } from "./implementations/PrometheusCounterPublisher";

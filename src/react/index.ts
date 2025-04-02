@@ -1,6 +1,7 @@
 import { ComponentEventCollector } from "./collectors";
 import { TelemetryProvider } from "./providers";
 import PrometheusCounterPublisherComponent from "./publishers/prometheus/counter-publisher";
+import { defineConfig } from "./utils/define-config";
 
 const Telemetry = {
   Provider: TelemetryProvider,
@@ -11,6 +12,9 @@ const Telemetry = {
   },
   Collectors: {
     ComponentEventCollector,
+  },
+  Config: {
+    defineConfig,
   },
 };
 

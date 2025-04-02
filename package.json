@@ -33,6 +33,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@influxdata/influxdb-client-browser": "^1.35.0",
     "axios": "^1.8.1"
   },
   "peerDependencies": {

@@ -1,59 +1,28 @@
-/*import { Task } from "./core";
-import { CounterMetricCollector } from "./core/collectors/CounterMetricCollector";
-import { PrometheusCounterPublisher } from "./core/publishers/prometheus/implementations/PrometheusCounterPublisher";
-import { IntervalScheduler } from "./core/schedulers/IntervalScheduler";
+/**
+ *
+ * API Key = _wz53_1BnDMa7unPLAayjzQM1gK9tbwzH7GNqRaeZ-uOOQjmk4fOI9fJZy4eXjbktpLpn83-Dyt4Nlx2gu9sFw==
+ *
+ *
+ */
 
-const clickEventCollector = new CounterMetricCollector({
-  metric_name: "react_component_events_total",
-  labels: {
-    project_id: "my_project",
-    event_type: "click",
-    component: "button",
-    component_id: "#button-id",
+import { InfluxPublisher } from "./core";
+
+const influxDB = new InfluxPublisher({
+  bucket: "POC Project",
+  organization_id: "7ed79ea185ada884",
+  token:
+    "_wz53_1BnDMa7unPLAayjzQM1gK9tbwzH7GNqRaeZ-uOOQjmk4fOI9fJZy4eXjbktpLpn83-Dyt4Nlx2gu9sFw==",
+  url: "http://localhost:8086",
+});
+
+influxDB.publish([
+  {
+    metric_name: "react_component_screen_time",
+    labels: {
+      type: "button",
+      id: "button_id",
+      user: "kursat",
+    },
+    data: 54,
   },
-});
-
-const hoverEventCollector = new CounterMetricCollector({
-  metric_name: "react_component_events_total",
-  labels: {
-    project_id: "my_project",
-    event_type: "hover",
-    component: "button",
-    component_id: "#button-id",
-  },
-});
-
-const componentScreenTimeCollector = new CounterMetricCollector({
-  metric_name: "react_component_screen_time_total",
-  labels: {
-    project_id: "my_project",
-    component: "button",
-    component_id: "#button-id",
-  },
-});
-
-const scheduler = new IntervalScheduler({
-  collectIntervalInMS: 2000,
-  publishIntervalInMS: 2000,
-});
-
-const publisher = new PrometheusCounterPublisher({
-  prometheus_url: "http://localhost:9092/metrics",
-  help: "React Component Event Metrics",
-});
-
-const task = new Task();
-task.metricCollectors.add(clickEventCollector);
-task.metricCollectors.add(hoverEventCollector);
-task.metricCollectors.add(componentScreenTimeCollector);
-task.scheduler = scheduler;
-task.publisher = publisher;
-
-task.start();
-
-setInterval(() => {
-  clickEventCollector.increment(Math.floor(Math.random() * 10));
-  hoverEventCollector.increment(Math.floor(Math.random() * 10));
-  componentScreenTimeCollector.increment(Math.floor(Math.random() * 100));
-}, 500);
-*/
+]);

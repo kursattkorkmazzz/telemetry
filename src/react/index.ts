@@ -1,17 +1,15 @@
-import { ComponentEventCollector } from "./collectors";
+import { ComponentScreenTimeMetricCollector } from "./collectors";
 import { TelemetryProvider } from "./providers";
-import PrometheusCounterPublisherComponent from "./publishers/prometheus/counter-publisher";
+import { InfluxPublisherComponent } from "./publishers";
 import { defineConfig } from "./utils/define-config";
 
 const Telemetry = {
   Provider: TelemetryProvider,
   Publishers: {
-    Prometheus: {
-      Counter: PrometheusCounterPublisherComponent,
-    },
+    InfluxPublisher: InfluxPublisherComponent,
   },
   Collectors: {
-    ComponentEventCollector,
+    ComponentScreenTimeCollector: ComponentScreenTimeMetricCollector,
   },
   Config: {
     defineConfig,

@@ -14,8 +14,8 @@ export class PrintConsolePublisher extends AbstractPublisher {
   private printMetricData(data: MetricData) {
     console.log("========================");
     console.log("Metric Name: " + data.metric_name);
-    console.log("Metric Labels: " + JSON.stringify(data.labels));
-    console.log("Data: " + data.data);
+    console.log("Metric Tags: " + JSON.stringify(data.tags, null, 3));
+    console.log("Metric Fields: " + JSON.stringify(data.fields, null, 3));
     console.log("========================");
   }
 }

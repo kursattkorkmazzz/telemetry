@@ -1,1 +1,1 @@
-export { InfluxPublisher } from "./InfluxDB";
+export { InfluxPublisher } from "./InfluxPublisher";

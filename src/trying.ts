@@ -6,6 +6,7 @@
  */
 
 import { InfluxPublisher } from "./core";
+import LineProtocolConverter from "./core/utils/line-protocol-converter";
 
 const influxDB = new InfluxPublisher({
   bucket: "POC Project",
@@ -13,16 +14,15 @@ const influxDB = new InfluxPublisher({
   token:
     "_wz53_1BnDMa7unPLAayjzQM1gK9tbwzH7GNqRaeZ-uOOQjmk4fOI9fJZy4eXjbktpLpn83-Dyt4Nlx2gu9sFw==",
   url: "http://localhost:8086",
+  defaultTags: {
+    project: "POC Kocatepe",
+    instance: "kursat",
+  },
 });
 
-influxDB.publish([
-  {
-    metric_name: "react_component_screen_time",
-    labels: {
-      type: "button",
-      id: "button_id",
-      user: "kursat",
-    },
-    data: 54,
+influxDB.publish({
+  metric_name: "react_component_screen_time_2",
+  fields: {
+    screen_open_time: 8500,
   },
-]);
+});

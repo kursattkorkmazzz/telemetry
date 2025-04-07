@@ -1,6 +1,5 @@
 import { AbstractPublisher } from "src/core";
-import MetricDataArray from "../types/MetricDataArrayType";
-import { log } from "node:console";
+import MetricData from "src/core/types/MetricData";
 
 type PublisherListItemType = { id: string; publisher: AbstractPublisher };
 
@@ -57,18 +56,18 @@ function deregister(
   return prevState.filter((p) => p.id !== data.id);
 }
 
-type PublishAllProps = { metrics: MetricDataArray };
+type PublishAllProps = { metrics: MetricData[] };
 function publishAll(
   prevState: PublisherListItemType[],
   data: PublishAllProps
 ): PublisherListItemType[] {
   prevState.forEach((p) => {
-    p.publisher.publish(data.metrics);
+    p.publisher.publish(...data.metrics);
   });
   return prevState;
 }
 
-type PublishByIdProps = { publisher_id: string; metrics: MetricDataArray };
+type PublishByIdProps = { publisher_id: string; metrics: MetricData[] };
 function publishById(
   prevState: PublisherListItemType[],
   data: PublishByIdProps
@@ -76,7 +75,7 @@ function publishById(
   const publisher = prevState.find((p) => p.id === data.publisher_id);
 
   if (publisher) {
-    publisher.publisher.publish(data.metrics);
+    publisher.publisher.publish(...data.metrics);
   }
   return prevState;
 }

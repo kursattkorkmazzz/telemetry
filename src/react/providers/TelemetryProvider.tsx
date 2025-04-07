@@ -1,21 +1,19 @@
 import React, { useReducer } from "react";
 import { createContext, ReactNode, useContext } from "react";
-import LabelType from "../types/LabelType";
-import MetricDataArray from "../types/MetricDataArrayType";
 import PublisherListReducer from "../reducers/publisher-list-reducer";
 import { AbstractPublisher } from "src/core";
+import MetricData, { TagType } from "src/core/types/MetricData";
 
 // #region Context Creation
 type TelemetryContextOptions = {
-  publish: (data: MetricDataArray, publisher_id?: string | null) => void;
+  publish: (data: MetricData[], publisher_id?: string | null) => void;
   getPublisherIdList: () => string[];
   registerPublisher: (
     publisher: AbstractPublisher,
     publisher_id: string
   ) => void;
   unregisterPublisher: (publisher_id: string) => boolean;
-  project_name: string; // Get by user.
-  common_labels?: LabelType; // Get by user.
+  common_tags?: TagType; // Get by user.
 };
 
 const TelemetryContext = createContext<TelemetryContextOptions | null>(null);
@@ -32,8 +30,7 @@ export function useTelemetry() {
 // #endregion
 
 type TelemetryProviderProps = {
-  project_name: string; // Get by user.
-  common_labels?: LabelType; // Get by user.
+  common_tags?: TagType; // Get by user.
   children?: ReactNode;
 };
 
@@ -61,16 +58,12 @@ export function TelemetryProvider(props: TelemetryProviderProps) {
     });
     return false;
   };
-  const publishHandler = (
-    data: MetricDataArray,
-    publisher_id?: string | null
-  ) => {
-    // Adding all labels into data.
+  const publishHandler = (data: MetricData[], publisher_id?: string | null) => {
+    // Adding all common tags into data.
     data.forEach((metric) => {
-      metric.labels = {
-        ...metric.labels,
-        project_name: props.project_name,
-        ...props.common_labels,
+      metric.tags = {
+        ...metric.tags,
+        ...props.common_tags,
       };
     });
 
@@ -98,8 +91,7 @@ export function TelemetryProvider(props: TelemetryProviderProps) {
   return (
     <TelemetryContext.Provider
       value={{
-        project_name: props.project_name,
-        common_labels: props.common_labels,
+        common_tags: props.common_tags,
         publish: publishHandler,
         getPublisherIdList: getPublisherIdHandler,
         registerPublisher: registerHandler,

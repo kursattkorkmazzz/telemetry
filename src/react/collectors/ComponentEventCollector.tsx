@@ -1,4 +1,4 @@
-import React, {
+/*import React, {
   Children,
   cloneElement,
   ReactElement,
@@ -64,3 +64,4 @@ export function ComponentEventCollector(props: ComponentEventCollectorProps) {
 
   return clonedChildren || null;
 }
+*/

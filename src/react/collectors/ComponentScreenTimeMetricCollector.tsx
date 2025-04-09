@@ -1,13 +1,10 @@
 "use client";
-import React, {
-  cloneElement,
-  ReactElement,
-  ReactNode,
-  useCallback,
-} from "react";
+import { cloneElement, ReactElement } from "react";
 import { HTMLAttributes, useEffect, useRef, useState } from "react";
 import mergeRefs from "../utils/merge-refs";
 import { useTelemetry } from "../providers";
+import browserCloseHandler from "../utils/browser-close-handler";
+import MetricData from "src/core/types/MetricData";
 
 type ComponentScreenTimeMetricCollectorProps = {
   children?: ReactElement;
@@ -17,6 +14,8 @@ type ComponentScreenTimeMetricCollectorProps = {
     checkIsDocumentFocused?: boolean; // Elemanın bulunduğu document objesinin focus oluğ olmadığını kontrol eder. (Check: focus, blur events.)
     checkIsVisible?: boolean; // Elemanın bulunduğu document objesinin sekmesinin açık oluğ olmadığını kontrol eder. (Check: Visibility API)
   };
+  threshold?: number; // Elemanın görünürlük oranı. (Check: IntersectionObserver),
+  tags?: Record<string, string>; // Elemanın tag'leri. (Check: HTMLElement.tagName)
 };
 
 // This will need telemetry provider to register Task to TelemetryAS. It will create task for specific purpose.
@@ -34,6 +33,33 @@ export function ComponentScreenTimeMetricCollector(
 
   const [startTime, setStartTime] = useState<number>(0);
 
+  const createMetricData = (data: number): MetricData => {
+    return {
+      metric_name: "react_component_screen_time",
+      tags: {
+        component_id: ref.current?.id || "unknown",
+        component_tag: ref.current?.tagName || "unknown",
+        ...props.tags,
+      },
+      fields: {
+        screen_open_time: data,
+      },
+    };
+  };
+
+  // Handles browser load and unloads.
+  useEffect(() => {
+    const cleanup: Function = browserCloseHandler(() => {
+      if (screenTime === 0) return [];
+      setStartTime(0);
+      setScreenTime(0);
+      return createMetricData(screenTime);
+    });
+    return () => {
+      cleanup();
+    };
+  }, [screenTime]);
+
   // Checks the element is in viewport ot not.
   useEffect(() => {
     if (ref.current) {
@@ -47,7 +73,7 @@ export function ComponentScreenTimeMetricCollector(
         },
         {
           root: null,
-          threshold: 1,
+          threshold: props.threshold || 0.9,
         }
       );
       observer.observe(ref.current);
@@ -57,6 +83,7 @@ export function ComponentScreenTimeMetricCollector(
       };
     }
   }, []);
+
   // Checks the document and windows is active or not.
   useEffect(() => {
     const returnFunctions: Function[] = [];
@@ -94,7 +121,6 @@ export function ComponentScreenTimeMetricCollector(
     };
   }, []);
 
-  useEffect(() => {}, []);
   // Koşulları kontrol eden bir yardımcı fonksiyon
   const shouldCount = () => {
     const { forcer, checkInViewport, checkIsDocumentFocused, checkIsVisible } =
@@ -109,45 +135,33 @@ export function ComponentScreenTimeMetricCollector(
   };
 
   const publishHandler = (data: number) => {
-    telemetry.publish(
-      [
-        {
-          metric_name: "react_component_screen_time",
-          tags: {
-            component_id: ref.current?.id || "unknown",
-            component_tag: ref.current?.tagName || "unknown",
-          },
-          fields: {
-            screen_open_time: data,
-          },
-        },
-      ],
-      "influx_publisher"
-    );
+    telemetry.publish([createMetricData(data)]);
   };
 
   // Calculating the screen time.
   useEffect(() => {
     if (shouldCount()) {
       if (startTime == 0) {
-        console.log("Başlatıldı");
+        //console.log("Sayaç başlatıldı.");
         setStartTime(Date.now()); // Sıfırdan başlatıldı.
-      } else {
-        console.log("Devam ettirildi");
-        setStartTime(startTime + screenTime); // Önceki sayılan toplam ms şimdiye eklenerek devam ettirildi.
       }
     } else {
-      if (!inViewport && startTime != 0) {
-        // Durduruldu
-        // Her şeyi sıfırla ve veriyi gönder.
-        console.log("Durduruldu");
-
+      if (startTime != 0) {
+        const elapsedTime = Date.now() - startTime; // Geçen süreyi hesapla.
+        // console.log("Duraklatıldı. Arada Geçen Süre: ", elapsedTime);
         setStartTime(0);
-        setScreenTime(0);
-        publishHandler(Date.now() - startTime);
-      } else if (inViewport && startTime != 0) {
-        console.log("Duraklatıldı");
-        setScreenTime(Date.now() - startTime);
+        setScreenTime((prev) => prev + elapsedTime); // Geçen süreyi ekle.
+
+        if (!inViewport) {
+          // console.log("Sayaç Durduruldu ve Paylaşıldı");
+          // eleman artık görünür değil bu nedenle toplam geçen süreyi paylaşma vakti geldiç
+          // console.log("Toplam Geçen Süre: ", screenTime + elapsedTime);
+
+          publishHandler(screenTime + elapsedTime); // Toplam süreyi paylaş.
+
+          setStartTime(0);
+          setScreenTime(0);
+        }
       }
     }
   }, [inViewport, isFocused, isVisible]);

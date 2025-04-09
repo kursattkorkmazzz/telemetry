@@ -1,6 +1,7 @@
 import { ComponentScreenTimeMetricCollector } from "./collectors";
 import { TelemetryProvider } from "./providers";
 import { InfluxPublisherComponent } from "./publishers";
+import { sendSavedDataToPublisher } from "./utils/browser-close-handler";
 import { defineConfig } from "./utils/define-config";
 
 const Telemetry = {
@@ -13,7 +14,7 @@ const Telemetry = {
   },
   Config: {
     defineConfig,
-  },
+  }
 };
 
 export default Telemetry;

@@ -1,8 +1,9 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { createContext, ReactNode, useContext } from "react";
 import PublisherListReducer from "../reducers/publisher-list-reducer";
 import { AbstractPublisher } from "src/core";
 import MetricData, { TagType } from "src/core/types/MetricData";
+import { sendSavedDataToPublisher } from "../utils/browser-close-handler";
 
 // #region Context Creation
 type TelemetryContextOptions = {
@@ -87,6 +88,10 @@ export function TelemetryProvider(props: TelemetryProviderProps) {
   const getPublisherIdHandler = () => {
     return state.map((p) => p.id);
   };
+
+  useEffect(() => {
+    sendSavedDataToPublisher(publishHandler);
+  }, []);
 
   return (
     <TelemetryContext.Provider

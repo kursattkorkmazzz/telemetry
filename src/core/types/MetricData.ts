@@ -5,5 +5,6 @@ type MetricData = {
   metric_name: string;
   tags?: TagType;
   fields: FieldType;
+  timestamp?: number; // Optional timestamp in milliseconds.
 };
 export default MetricData;

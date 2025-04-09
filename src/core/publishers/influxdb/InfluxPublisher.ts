@@ -27,7 +27,7 @@ export class InfluxPublisher extends AbstractPublisher {
     this._writeApi = this.influxDB.getWriteApi(
       opts.organization_id,
       opts.bucket,
-      "s", // for seconds
+      "ms", // for seconds
       {
         defaultTags: this.defaultTags,
       }
@@ -70,6 +70,7 @@ export class InfluxPublisher extends AbstractPublisher {
           }
         });
 
+        data.timestamp && point.timestamp(data.timestamp);
         pointList.push(point);
       });
 

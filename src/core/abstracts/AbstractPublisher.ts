@@ -1,4 +1,5 @@
-export default abstract class AbstractPublisher {
-  abstract name: string;
-  abstract publish(...args: any): Promise<void>;
+import MetricData from "../types/MetricData";
+
+export abstract class AbstractPublisher {
+  abstract publish(...args: MetricData[]): void;
 }
